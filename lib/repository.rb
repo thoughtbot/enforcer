@@ -18,10 +18,12 @@ class Repository
   end
 
   def add(collaborator)
+    STDOUT.puts ">> Adding #{collaborator}"
     request(:post, "/collaborators/#{@project}/add/#{collaborator}")
   end
 
   def remove(collaborator)
+    STDOUT.puts ">> Removing #{collaborator}"
     request(:post, "/collaborators/#{@project}/remove/#{collaborator}")
   end
 end

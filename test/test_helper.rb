@@ -12,7 +12,10 @@ begin
 rescue LoadError
 end
 
-
 class Test::Unit::TestCase
   include RR::Adapters::TestUnit
+
+  def setup
+    stub(STDOUT).puts
+  end
 end

@@ -11,6 +11,7 @@ World(RR::Adapters::TestUnit)
 
 Before do
   RR.reset
+  stub(STDOUT).puts
 end
 
 After do

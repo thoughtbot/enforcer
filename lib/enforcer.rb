@@ -16,6 +16,7 @@ class Enforcer
     instance_eval(&block)
     return if @collaborators.nil?
 
+    STDOUT.puts "Enforcing settings for #{project_name}"
     repo = Repository.new(@account_name, @api_key, project_name)
 
     existing_collaborators = repo.list
