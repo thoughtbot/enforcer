@@ -6,8 +6,7 @@ class GitHubApi
   base_uri 'http://github.com/api/v2/json'
 
   def self.add_collaborator(account, api_key, repo, collaborator)
-    collaborator_list = self.post "/repos/collaborators/#{repo}/add/#{collaborator}", :login => account, :token => api_key
-    collaborators = JSON.parse(collaborator_list)
-    collaborators['collaborators']
+    response = self.post "/repos/collaborators/#{repo}/add/#{collaborator}", :body => { :login => account, :token => api_key }
+    response['collaborators']
   end
 end

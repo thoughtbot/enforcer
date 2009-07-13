@@ -7,8 +7,8 @@ class GitHubApiTest < Test::Unit::TestCase
       @api_key = "deadbeef"
       @repo    = "repo"
       @user    = "coreyhaines" + rand(10).to_s
-      @collaborators = '{"collaborators": ["qrush", "'+ @user +'"]}'
-      stub(GitHubApi).post(anything, anything) { @collaborators }
+      @collaborators = ["qrush", @user]
+      stub(GitHubApi).post(anything, anything) { {'collaborators' => @collaborators }}
     end
 
     should "set base uri" do
@@ -22,9 +22,9 @@ class GitHubApiTest < Test::Unit::TestCase
 
       should "hit the github api" do
         assert_received(GitHubApi) do |subject|
-          subject.post("/repos/collaborators/#{@repo}/add/#{@user}",
+          subject.post("/repos/collaborators/#{@repo}/add/#{@user}", :body => {
             :login => @account,
-            :token => @api_key)
+            :token => @api_key})
         end
       end
 
