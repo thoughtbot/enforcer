@@ -1,5 +1,5 @@
 $:.unshift(File.dirname(__FILE__))
-require 'github_api'
+require 'repository'
 
 class Enforcer
   def initialize(account_name, api_key)
@@ -11,18 +11,16 @@ class Enforcer
     instance_eval(&block)
     return if @collaborators.nil?
 
-    existing_collaborators = GitHubApi.list_collaborators(@account_name, project_name)
+    repo = Repository.new(@account_name, @api_key, project_name)
+
+    existing_collaborators = repo.list
 
     { :add => @collaborators - existing_collaborators,
       :remove => existing_collaborators - @collaborators}.each_pair do |action, collaborators|
-        modify_collaborators action, project_name, collaborators
+        collaborators.each do |collaborator|
+          repo.send(action, collaborator)
+        end
       end
-  end
-
-  def modify_collaborators(action, project_name, these)
-    these.each do |collaborator|
-      GitHubApi.send("#{action}_collaborator", @account_name, @api_key, project_name, collaborator)
-    end
   end
 
   def collaborators(*names)

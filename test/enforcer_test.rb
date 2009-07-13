@@ -3,62 +3,65 @@ require 'test_helper'
 class EnforcerTest < Test::Unit::TestCase
   context "with an enforcer" do
     setup do
-      stub(GitHubApi).add_collaborator(anything, anything, anything, anything)
       @existing_collaborators = []
-      stub(GitHubApi).list_collaborators(anything, anything) { @existing_collaborators }
-
-      @username = "user"
+      @repo = "repo"
+      @project = "project"
+      @account = "user"
       @api_key = "api key"
-      @enforcer = Enforcer.new(@username, @api_key)
+
+      stub(@repo).add(anything)
+      stub(@repo).list { @existing_collaborators }
+      mock(Repository).new(@account, @api_key, @project) { @repo }
+
+      @enforcer = Enforcer.new(@account, @api_key)
     end
 
     should "add a collaborator to the project" do
-      @enforcer.project 'foo' do
+      @enforcer.project @project do
         collaborators 'chaines'
       end
 
-      assert_received(GitHubApi) do |subject|
-        subject.add_collaborator(@username, @api_key, 'foo', 'chaines')
+      assert_received(@repo) do |subject|
+        subject.add('chaines')
       end
     end
 
     should "add collaborators to the project" do
-      @enforcer.project 'foo' do
+      @enforcer.project @project do
         collaborators 'chaines', 'qrush'
       end
 
-      assert_received(GitHubApi) do |subject|
-        subject.add_collaborator(@username, @api_key, 'foo', 'chaines')
-        subject.add_collaborator(@username, @api_key, 'foo', 'qrush')
+      assert_received(@repo) do |subject|
+        subject.add('chaines')
+        subject.add('qrush')
       end
     end
 
     context "with an existing user" do
       setup do
         @existing_user = "ralph"
-        @repo          = "repo"
-        stub(GitHubApi).remove_collaborator(anything, anything, anything, anything)
+        stub(@repo).remove(anything)
         @existing_collaborators << "ralph"
       end
 
       should "not add existing user to the project" do
-        @enforcer.project 'foo' do
+        @enforcer.project @project do
           collaborators 'ralph'
         end
 
-        assert_received(GitHubApi) do |subject|
-          subject.add_collaborator(@username, @api_key, 'foo', 'ralph').never
+        assert_received(@repo) do |subject|
+          subject.add('ralph').never
         end
       end
 
       should "remove existing user from the project if not in collaborators" do
-        @enforcer.project 'foo' do
+        @enforcer.project @project do
           collaborators 'qrush'
         end
 
-        assert_received(GitHubApi) do |subject|
-          subject.add_collaborator(@username, @api_key, 'foo', 'qrush')
-          subject.remove_collaborator(@username, @api_key, 'foo', @existing_user)
+        assert_received(@repo) do |subject|
+          subject.add('qrush')
+          subject.remove(@existing_user)
         end
       end
     end
@@ -69,12 +72,12 @@ class EnforcerTest < Test::Unit::TestCase
       @enforcer = "enforcer"
       stub(@enforcer).project(anything)
 
-      @username = "thoughtbot"
+      @account = "thoughtbot"
       @api_key  = "api key"
-      mock(Enforcer).new(@username, @api_key) { @enforcer }
+      mock(Enforcer).new(@account, @api_key) { @enforcer }
     end
     should "be there and take a string and block" do
-      Enforcer(@username, @api_key) { project("corey") {} }
+      Enforcer(@account, @api_key) { project("corey") {} }
       assert_received(@enforcer) { |subject| subject.project("corey") }
     end
   end
