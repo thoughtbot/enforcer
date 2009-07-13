@@ -1,7 +1,7 @@
 = enforcer
 
-Description goes here.
+A simple way to manage permissions on GitHub.
 
 == Copyright
 
-Copyright (c) 2009 Nick Quaranto. See LICENSE for details.
+Copyright (c) 2009 thoughtbot. See LICENSE for details.
