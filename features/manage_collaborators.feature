@@ -25,3 +25,16 @@ Feature: Manage collaborators
     Then the GitHub API should have received a request to add a "rmmt" as a collaborator for "shoulda"
     And the GitHub API should have received a request to add a "coreyhaines" as a collaborator for "shoulda"
     And the GitHub API should have received a request to add a "qrush" as a collaborator for "shoulda"
+
+  Scenario: Removing one collaborator from the project
+    Given "qrush" is a collaborator for "shoulda"
+    When I execute the following code
+     """
+     Enforcer "thoughtbot", "deadbeef" do
+       project "shoulda" do
+         collaborators 'coreyhaines'
+       end
+     end
+     """
+    Then the GitHub API should have received a request to add a "coreyhaines" as a collaborator for "shoulda"
+    And the GitHub API should have received a request to remove "qrush" as a collaborator for "shoulda"

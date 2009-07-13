@@ -1,5 +1,8 @@
 Before do
   stub(GitHubApi).add_collaborator(anything, anything, anything, anything)
+  stub(GitHubApi).remove_collaborator(anything, anything, anything, anything)
+  @existing_collaborators = []
+  stub(GitHubApi).list_collaborators(anything, anything) { @existing_collaborators }
 end
 
 
@@ -27,3 +30,10 @@ Then /^the GitHub API should have received a request to add a "(.*)" as a collab
   assert_received(GitHubApi) { |subject| subject.add_collaborator(@account, @api_key, repo, user) }
 end
 
+Given /^"([^\"]*)" is a collaborator for "([^\"]*)"$/ do |user, repo|
+  @existing_collaborators << user
+end
+
+Then /^the GitHub API should have received a request to remove "([^\"]*)" as a collaborator for "([^\"]*)"$/ do |user, repo|
+  assert_received(GitHubApi) { |subject| subject.remove_collaborator(@account, @api_key, repo, user) }
+end

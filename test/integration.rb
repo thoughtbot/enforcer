@@ -5,8 +5,8 @@ require 'lib/enforcer'
 
 token = `git config github.token`
 
-Enforcer "qrush", token do
+Enforcer "qrush", token.chomp do
   project "jekyll" do
-    collaborators "coreyhaines"
+    collaborators "qrush"
   end
 end
