@@ -2,7 +2,8 @@ $:.unshift(File.dirname(__FILE__))
 require 'github_api'
 
 class Enforcer
-  def initialize(user_name)
+  def initialize(account_name)
+    @account_name = account_name
   end
 
   def project(project_name, &block)
@@ -10,7 +11,7 @@ class Enforcer
     return if @collaborators.nil?
 
     @collaborators.each do |collaborator|
-      GitHubApi.add_collaborator(project_name, collaborator)
+      GitHubApi.add_collaborator(@account_name, project_name, collaborator)
     end
   end
 
@@ -19,7 +20,7 @@ class Enforcer
   end
 end
 
-def Enforcer(user_name, &block)
-   enforcer = Enforcer.new(user_name)
-   enforcer.instance_eval(&block)
+def Enforcer(account_name, &block)
+  enforcer = Enforcer.new(account_name)
+  enforcer.instance_eval(&block)
 end

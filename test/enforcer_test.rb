@@ -3,22 +3,18 @@ require 'test_helper'
 class EnforcerTest < Test::Unit::TestCase
   context "with an enforcer" do
     setup do
-      stub(GitHubApi).add_collaborator(anything, anything)
+      stub(GitHubApi).add_collaborator(anything, anything, anything)
       @username = "user"
       @enforcer = Enforcer.new(@username)
     end
 
-    #should "store username" do
-      #assert_equal @username, @enforcer.username
-    #end
-
-    should "adds the collaborators to the project" do
+    should "add collaborators to the project" do
       @enforcer.project 'foo' do
         collaborators 'chaines'
       end
 
       assert_received(GitHubApi) do |subject|
-        subject.add_collaborator('foo', 'chaines')
+        subject.add_collaborator(@username, 'foo', 'chaines')
       end
     end
   end
