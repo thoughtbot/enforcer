@@ -1,5 +1,6 @@
-Given /^an account "(.*)"$/ do |account|
+Given /^an account "(.*)" with an api key of "(.*)"$/ do |account, api_key|
   @account = account
+  @api_key = api_key
 end
 
 Given /^I am adding "(.*)" as a collaborator to "(.*)"$/ do |user, repo, code|
@@ -7,7 +8,7 @@ Given /^I am adding "(.*)" as a collaborator to "(.*)"$/ do |user, repo, code|
   @names_list = @names.join('", "')
   @collaborators = '{"collaborators: + ["' + @names_list + '"]}'
 
-  mock(GitHubApi).add_collaborator(@account, repo, user)
+  mock(GitHubApi).add_collaborator(@account, @api_key, repo, user)
   @code = code
 end
 
@@ -23,6 +24,6 @@ Given /^the following collaborators for "([^\"]*)"$/ do |project_name, table|
 end
 
 Then /^the GitHub API should have received a request to add a "(.*)" as a collaborator for "(.*)"$/ do |user, repo|
-  assert_received(GitHubApi) { |subject| subject.add_collaborator(@account, repo, user) }
+  assert_received(GitHubApi) { |subject| subject.add_collaborator(@account, @api_key, repo, user) }
 end
 

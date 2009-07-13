@@ -1,6 +1,6 @@
 Feature: Manage collaborators
   Background:
-    Given an account "thoughtbot"
+    Given an account "thoughtbot" with an api key of "deadbeef"
 
   Scenario: Adding a single collaborator for a specific project
     Given the following collaborators for "shoulda"
@@ -8,7 +8,7 @@ Feature: Manage collaborators
      |thoughtbot|
     Given I am adding "rmmt" as a collaborator to "shoulda"
      """
-     Enforcer "thoughtbot" do
+     Enforcer "thoughtbot", "deadbeef" do
        project "shoulda" do
          collaborators 'rmmt'
        end

@@ -3,9 +3,10 @@ require 'test_helper'
 class EnforcerTest < Test::Unit::TestCase
   context "with an enforcer" do
     setup do
-      stub(GitHubApi).add_collaborator(anything, anything, anything)
+      stub(GitHubApi).add_collaborator(anything, anything, anything, anything)
       @username = "user"
-      @enforcer = Enforcer.new(@username)
+      @api_key = "api key"
+      @enforcer = Enforcer.new(@username, @api_key)
     end
 
     should "add collaborators to the project" do
@@ -14,7 +15,7 @@ class EnforcerTest < Test::Unit::TestCase
       end
 
       assert_received(GitHubApi) do |subject|
-        subject.add_collaborator(@username, 'foo', 'chaines')
+        subject.add_collaborator(@username, @api_key, 'foo', 'chaines')
       end
     end
   end
@@ -25,10 +26,11 @@ class EnforcerTest < Test::Unit::TestCase
       stub(@enforcer).project(anything)
 
       @username = "thoughtbot"
-      mock(Enforcer).new(@username) { @enforcer }
+      @api_key  = "api key"
+      mock(Enforcer).new(@username, @api_key) { @enforcer }
     end
     should "be there and take a string and block" do
-      Enforcer("thoughtbot") { project("corey") {} }
+      Enforcer(@username, @api_key) { project("corey") {} }
       assert_received(@enforcer) { |subject| subject.project("corey") }
     end
   end

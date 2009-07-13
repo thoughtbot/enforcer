@@ -7,8 +7,7 @@ class GitHubApiTest < Test::Unit::TestCase
       @repo = "repo"
       @user = "coreyhaines" + rand(10).to_s
       @collaborators = '{"collaborators": ["qrush", "'+ @user +'"]}'
-#      FakeWeb.register_uri(:post, "http://github.com/api/v2/json/repos/collaborators/#{@repo}/#{@user}", :string => @collaborators)
-#      stub(GitHubApi).post(
+      stub(GitHubApi).post("http://github.com/api/v2/json/repos/collaborators/#{@repo}/add/#{@user}") { @collaborators }
     end
 
     should "hit the github api" do
