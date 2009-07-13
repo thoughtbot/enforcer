@@ -7,7 +7,8 @@ Given /^the following$/ do |code|
 end
 
 When /^I execute it$/ do
-  eval(@code)
+  enforcer = Enforcer.new
+  enforcer.instance_eval(@code)
 end
 
 Then /^I should have made a request to add the collaborators$/ do |table|

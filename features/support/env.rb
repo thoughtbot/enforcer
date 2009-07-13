@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'rr'
 require 'test/unit'
+require 'enforcer'
 
-World do
-  include Test::Unit::Assertions
-end
+World(Test::Unit::Assertions)
+World(RR::Adapters::TestUnit)
