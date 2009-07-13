@@ -9,13 +9,24 @@ class EnforcerTest < Test::Unit::TestCase
       @enforcer = Enforcer.new(@username, @api_key)
     end
 
-    should "add collaborators to the project" do
+    should "add a collaborator to the project" do
       @enforcer.project 'foo' do
         collaborators 'chaines'
       end
 
       assert_received(GitHubApi) do |subject|
         subject.add_collaborator(@username, @api_key, 'foo', 'chaines')
+      end
+    end
+
+    should "add collaborators to the project" do
+      @enforcer.project 'foo' do
+        collaborators 'chaines', 'qrush'
+      end
+
+      assert_received(GitHubApi) do |subject|
+        subject.add_collaborator(@username, @api_key, 'foo', 'chaines')
+        subject.add_collaborator(@username, @api_key, 'foo', 'qrush')
       end
     end
   end

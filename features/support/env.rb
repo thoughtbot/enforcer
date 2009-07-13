@@ -8,3 +8,16 @@ FakeWeb.allow_net_connect = false
 
 World(Test::Unit::Assertions)
 World(RR::Adapters::TestUnit)
+
+Before do
+  RR.reset
+end
+
+After do
+  begin
+    RR.verify
+  ensure
+    RR.reset
+  end
+end
+
