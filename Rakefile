@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'rake'
 
+task :default => [:test, :features]
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
@@ -37,7 +39,6 @@ rescue LoadError
 end
 
 
-task :default => :test
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
@@ -54,3 +55,15 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+begin
+  require 'cucumber/rake/task'
+
+  Cucumber::Rake::Task.new(:features) do |t|
+    t.cucumber_opts = "--format progress"
+  end
+rescue LoadError
+  desc 'Cucumber rake task not available'
+  task :features do
+    abort 'Cucumber rake task is not available. Be sure to install cucumber as a gem or plugin'
+  end
+end

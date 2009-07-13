@@ -2,6 +2,30 @@
 
 A simple way to manage permissions on GitHub.
 
+project do |p|
+  p.collaborators = ["list", "of", "default", "callaborators"]
+end
+
+project :name => "shoulda" do |p|
+  p.collaborators << [:rmmt, :qrush]
+end
+
+Background:
+Given we are capturing http requests
+
+Given the following
+"""
+project :name => "shoulda" do |p|
+p.collaborators << ['rmmt']
+end
+"""
+When I execute it
+Then I should have made a request to add the collaborators
+|name|
+|rmmt|
+
+
+
 == Copyright
 
 Copyright (c) 2009 thoughtbot. See LICENSE for details.

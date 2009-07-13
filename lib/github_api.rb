@@ -1,0 +1,2 @@
+class GitHubApi
+end
