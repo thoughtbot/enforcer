@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
 require 'lib/enforcer'
 
 token = `git config github.token`

@@ -1,6 +1,3 @@
-require 'httparty'
-require 'json'
-
 class Repository
   include HTTParty
   base_uri 'http://github.com/api/v2/json/repos'

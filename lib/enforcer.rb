@@ -1,4 +1,9 @@
 $:.unshift(File.dirname(__FILE__))
+
+require 'rubygems'
+require 'httparty'
+require 'json'
+
 require 'repository'
 
 class Enforcer
