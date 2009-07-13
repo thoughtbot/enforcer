@@ -1,16 +1,17 @@
 Feature: Manage collaborators
 
-  Background:
-    Given we are capturing http requests
-
   Scenario: Adding a single collaborator for a specific project
-    Given the following
+   Given the following collaborators for "shoulda"
+    |name      |
+    |thoughtbot|
+   Given I am adding "rmmt" as a collaborator to "shoulda"
     """
-    project "shoulda" do
-      collaborators 'rmmt'
+    Enforcer "thoughtbot" do
+      project "shoulda" do
+        collaborators 'rmmt'
+      end
     end
     """
     When I execute it
-    Then I should have made a request to add the collaborators to project "shoulda"
-    |name|
-    |rmmt|
+    Then the GitHub API should have received a request to add a "rmmt" as a collaborator for "shoulda"
+
