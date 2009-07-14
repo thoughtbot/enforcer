@@ -17,9 +17,7 @@ class EnforcerTest < Test::Unit::TestCase
     end
 
     should "add a collaborator to the project" do
-      @enforcer.project @project do
-        collaborators 'chaines'
-      end
+      @enforcer.project @project, 'chaines'
 
       assert_received(@repo) do |subject|
         subject.add('chaines')
@@ -27,9 +25,7 @@ class EnforcerTest < Test::Unit::TestCase
     end
 
     should "add collaborators to the project" do
-      @enforcer.project @project do
-        collaborators 'chaines', 'qrush'
-      end
+      @enforcer.project @project, 'chaines', 'qrush'
 
       assert_received(@repo) do |subject|
         subject.add('chaines')
@@ -45,9 +41,7 @@ class EnforcerTest < Test::Unit::TestCase
       end
 
       should "not add existing user to the project" do
-        @enforcer.project @project do
-          collaborators 'ralph'
-        end
+        @enforcer.project @project, 'ralph'
 
         assert_received(@repo) do |subject|
           subject.add('ralph').never
@@ -55,9 +49,7 @@ class EnforcerTest < Test::Unit::TestCase
       end
 
       should "remove existing user from the project if not in collaborators" do
-        @enforcer.project @project do
-          collaborators 'qrush'
-        end
+        @enforcer.project @project, 'qrush'
 
         assert_received(@repo) do |subject|
           subject.add('qrush')
@@ -70,15 +62,16 @@ class EnforcerTest < Test::Unit::TestCase
   context "setting up enforcer dsl" do
     setup do
       @enforcer = "enforcer"
-      stub(@enforcer).project(anything)
+      stub(@enforcer).project(anything, anything)
 
       @account = "thoughtbot"
       @api_key  = "api key"
       mock(Enforcer).new(@account, @api_key) { @enforcer }
     end
+
     should "be there and take a string and block" do
-      Enforcer(@account, @api_key) { project("corey") {} }
-      assert_received(@enforcer) { |subject| subject.project("corey") }
+      Enforcer(@account, @api_key) { project("shoulda", "corey") {} }
+      assert_received(@enforcer) { |subject| subject.project("shoulda", "corey") }
     end
   end
 end

@@ -21,7 +21,7 @@ When /^I execute the following code$/ do |code|
   eval(code)
 end
 
-Then /^the GitHub API should have received a request to add a "(.*)" as a collaborator for "(.*)"$/ do |user, repo|
+Then /^the GitHub API should have received a request to add "(.*)" as a collaborator for "(.*)"$/ do |user, repo|
   assert_received(@repo) { |subject| subject.add(user) }
 end
 

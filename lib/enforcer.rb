@@ -12,25 +12,20 @@ class Enforcer
     @api_key = api_key
   end
 
-  def project(project_name, &block)
-    instance_eval(&block)
-    return if @collaborators.nil?
+  def project(project_name, *collaborators)
+    return if collaborators.nil?
 
     STDOUT.puts "Enforcing settings for #{project_name}"
     repo = Repository.new(@account_name, @api_key, project_name)
 
     existing_collaborators = repo.list
 
-    { :add => @collaborators - existing_collaborators,
-      :remove => existing_collaborators - @collaborators}.each_pair do |action, collaborators|
-        collaborators.each do |collaborator|
+    { :add => collaborators - existing_collaborators,
+      :remove => existing_collaborators - collaborators}.each_pair do |action, group|
+        group.each do |collaborator|
           repo.send(action, collaborator)
         end
       end
-  end
-
-  def collaborators(*names)
-    @collaborators = names
   end
 end
 

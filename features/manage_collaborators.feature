@@ -6,35 +6,40 @@ Feature: Manage collaborators
     When I execute the following code
      """
      Enforcer "thoughtbot", "deadbeef" do
-       project "shoulda" do
-         collaborators 'rmmt'
-       end
+       project "shoulda", 'rmmt'
      end
      """
-    Then the GitHub API should have received a request to add a "rmmt" as a collaborator for "shoulda"
+    Then the GitHub API should have received a request to add "rmmt" as a collaborator for "shoulda"
+
+  Scenario: Adding a single collaborator for more than one project
+    When I execute the following code
+     """
+     Enforcer "thoughtbot", "deadbeef" do
+       project "shoulda", 'rmmt'
+       project "factory_girl", 'qrush'
+     end
+     """
+    Then the GitHub API should have received a request to add "rmmt" as a collaborator for "shoulda"
+    Then the GitHub API should have received a request to add "qrush" as a collaborator for "factory_girl"
 
   Scenario: Adding more than one collaborators for a specific project
     When I execute the following code
      """
      Enforcer "thoughtbot", "deadbeef" do
-       project "shoulda" do
-         collaborators 'rmmt', 'coreyhaines', 'qrush'
-       end
+       project "shoulda", 'rmmt', 'coreyhaines', 'qrush'
      end
      """
-    Then the GitHub API should have received a request to add a "rmmt" as a collaborator for "shoulda"
-    And the GitHub API should have received a request to add a "coreyhaines" as a collaborator for "shoulda"
-    And the GitHub API should have received a request to add a "qrush" as a collaborator for "shoulda"
+    Then the GitHub API should have received a request to add "rmmt" as a collaborator for "shoulda"
+    And the GitHub API should have received a request to add "coreyhaines" as a collaborator for "shoulda"
+    And the GitHub API should have received a request to add "qrush" as a collaborator for "shoulda"
 
   Scenario: Removing one collaborator from the project
     Given "qrush" is a collaborator for "shoulda"
     When I execute the following code
      """
      Enforcer "thoughtbot", "deadbeef" do
-       project "shoulda" do
-         collaborators 'coreyhaines'
-       end
+       project "shoulda", 'coreyhaines'
      end
      """
-    Then the GitHub API should have received a request to add a "coreyhaines" as a collaborator for "shoulda"
+    Then the GitHub API should have received a request to add "coreyhaines" as a collaborator for "shoulda"
     And the GitHub API should have received a request to remove "qrush" as a collaborator for "shoulda"
