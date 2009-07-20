@@ -2,6 +2,41 @@
 
 A simple way to manage permissions on GitHub.
 
-== Copyright
+== usage
+
+Create an enforcer script and then run it with the "enforcer" executable.
+
+  enforcer my_enforcer_script.rb
+
+== howto
+
+The DSL should be formed like such:
+
+  Enforcer "your github account", "your github api key" do
+    project "some project", "user1", "user2", "user3"
+  end
+
+The users passed into the project are then set as the collaborators. Any
+users not listed are removed. You could use a GitHub API wrapper like
+Octopi to load up your projects as well. Here's a more complex example:
+
+  require 'octopi'
+  include Octopi
+  account = "thoughtbot"
+  token   = "deadbeef"
+
+  Enforcer account, token do
+    authenticated_with account, token do |github|
+      @projects = github.user.repositories.map { |repo| repo.name }.sort
+    end
+
+    users = %w[user1 user2 user3]
+
+    @projects.each do |name|
+      project name, *users
+    end
+  end
+
+== legal
 
 Copyright (c) 2009 thoughtbot. See LICENSE for details.
