@@ -7,11 +7,10 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "enforcer"
-    gem.summary = %Q{TODO}
-    gem.email = "nick@quaran.to"
-    gem.homepage = "http://github.com/qrush/enforcer"
+    gem.summary = %Q{A simple way to manage permissions on GitHub}
+    gem.email = "nquaranto@thoughtbot.com"
+    gem.homepage = "http://github.com/thoughtbot/enforcer"
     gem.authors = ["Nick Quaranto"]
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 
 rescue LoadError
