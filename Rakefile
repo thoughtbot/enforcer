@@ -11,6 +11,8 @@ begin
     gem.email = "nquaranto@thoughtbot.com"
     gem.homepage = "http://github.com/thoughtbot/enforcer"
     gem.authors = ["Nick Quaranto"]
+    gem.add_dependency("httparty")
+    gem.add_dependency("fcoury-octopi")
   end
 
 rescue LoadError
@@ -36,8 +38,6 @@ rescue LoadError
     abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
   end
 end
-
-
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
