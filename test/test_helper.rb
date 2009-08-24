@@ -16,6 +16,15 @@ class Test::Unit::TestCase
   include RR::Adapters::TestUnit
 
   def setup
+    RR.reset
     stub(STDOUT).puts
+  end
+
+  def teardown
+    begin
+      RR.verify
+    ensure
+      RR.reset
+    end
   end
 end

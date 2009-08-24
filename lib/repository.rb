@@ -2,6 +2,14 @@ class Repository
   include HTTParty
   base_uri 'http://github.com/api/v2/json/repos'
 
+  HTTP_ERRORS = [Timeout::Error,
+                 Errno::EINVAL,
+                 Errno::ECONNRESET,
+                 EOFError,
+                 Net::HTTPBadResponse,
+                 Net::HTTPHeaderSyntaxError,
+                 Net::ProtocolError]
+
   def initialize(account, api_key, project)
     @account = account
     @project = project
@@ -9,8 +17,12 @@ class Repository
   end
 
   def request(method, path)
-    response = self.class.send(method, path, :body => { :login => @account, :token => @api_key })
-    response['collaborators']
+    begin
+      response = self.class.send(method, path, :body => { :login => @account, :token => @api_key })
+      response['collaborators']
+    rescue *HTTP_ERRORS => ex
+      STDOUT.puts ">> There was a problem contacting GitHub: #{ex}"
+    end
   end
 
   def list

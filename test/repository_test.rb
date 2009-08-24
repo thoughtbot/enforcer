@@ -14,6 +14,15 @@ class RepositoryTest < Test::Unit::TestCase
       assert_equal "http://github.com/api/v2/json/repos", Repository.base_uri
     end
 
+    context "github is down" do
+      should "not fail" do
+        stub(Repository).get(anything, anything) { raise TimeoutError }
+        assert_nothing_raised do
+          @repo.list
+        end
+      end
+    end
+
     context "listing collaborators" do
       setup do
         @collaborators = ["qrush", "coreyhaines"]

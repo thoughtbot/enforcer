@@ -16,6 +16,18 @@ class EnforcerTest < Test::Unit::TestCase
       @enforcer = Enforcer.new(@account, @api_key)
     end
 
+    should "totally skip adding/removing collaborators if the existing collaborators can't be found" do
+      @existing_collaborators = nil
+
+      assert_nothing_raised do
+        @enforcer.project @project, 'chaines'
+      end
+
+      assert_received(@repo) do |subject|
+        subject.add('chaines').never
+      end
+    end
+
     should "add a collaborator to the project" do
       @enforcer.project @project, 'chaines'
 

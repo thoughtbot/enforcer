@@ -20,6 +20,11 @@ class Enforcer
 
     existing_collaborators = repo.list
 
+    if existing_collaborators.nil?
+      STDOUT.puts ">> Can't find existing collaborators for this project"
+      return
+    end
+
     { :add => collaborators - existing_collaborators,
       :remove => existing_collaborators - collaborators}.each_pair do |action, group|
         group.each do |collaborator|
