@@ -10,6 +10,7 @@ class EnforcerTest < Test::Unit::TestCase
       @api_key = "api key"
 
       stub(@repo).add(anything)
+      stub(@repo).postreceive(anything)
       stub(@repo).list { @existing_collaborators }
       mock(Repository).new(@account, @api_key, @project) { @repo }
 
@@ -68,22 +69,14 @@ class EnforcerTest < Test::Unit::TestCase
           subject.remove(@existing_user)
         end
       end
-    end
-  end
 
-  context "setting up enforcer dsl" do
-    setup do
-      @enforcer = "enforcer"
-      stub(@enforcer).project(anything, anything)
+      should "add a postreceive url to the project" do
+        @enforcer.postreceive @project, 'http://example.com'
 
-      @account = "thoughtbot"
-      @api_key  = "api key"
-      mock(Enforcer).new(@account, @api_key) { @enforcer }
-    end
-
-    should "be there and take a string and block" do
-      Enforcer(@account, @api_key) { project("shoulda", "corey") {} }
-      assert_received(@enforcer) { |subject| subject.project("shoulda", "corey") }
+        assert_received(@repo) do |subject|
+          subject.postreceive('http://example.com')
+        end
+      end
     end
   end
 end

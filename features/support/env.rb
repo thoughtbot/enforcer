@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'rr'
 require 'test/unit'
-require 'enforcer'
+require 'lib/enforcer'
 require 'fakeweb'
 
 FakeWeb.allow_net_connect = false

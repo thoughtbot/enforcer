@@ -15,11 +15,22 @@ class RepositoryTest < Test::Unit::TestCase
     end
 
     context "github is down" do
-      should "not fail" do
+      should "not fail on api methods" do
         stub(Repository).get(anything, anything) { raise TimeoutError.new("Failwhale!") }
         assert_nothing_raised do
           @repo.list
         end
+      end
+    end
+
+    context "adding postreceive hook" do
+      setup do
+        @response = "Accepted!"
+        FakeWeb.register_uri(:post, "https://github.com/#{@account}/#{@project}/edit/postreceive_urls", :body => @response)
+      end
+
+      should "submit form data to github" do
+        assert_equal @response, @repo.postreceive('http://example.com')
       end
     end
 
@@ -61,6 +72,7 @@ class RepositoryTest < Test::Unit::TestCase
         assert_equal ["qrush", @user], @collaborators
       end
     end
+
     context "removing a collaborator" do
       setup do
         @collaborators = ["qrush"]

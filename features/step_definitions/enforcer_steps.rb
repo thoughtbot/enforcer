@@ -5,6 +5,7 @@ Before do
   stub(Repository).new(anything, anything, anything) { @repo }
   stub(@repo).add(anything)
   stub(@repo).remove(anything)
+  stub(@repo).postreceive(anything)
   stub(@repo).list { @existing_collaborators }
 end
 
@@ -27,4 +28,8 @@ end
 
 Then /^the GitHub API should have received a request to remove "([^\"]*)" as a collaborator for "([^\"]*)"$/ do |user, repo|
   assert_received(@repo) { |subject| subject.remove(user) }
+end
+
+Then /^the GitHub API should have received a request to add "([^\"]*)" as a post\-receive url for "([^\"]*)"$/ do |url, repo|
+  assert_received(@repo) { |subject| subject.postreceive(url) }
 end
