@@ -13,12 +13,19 @@ Create an enforcer script and then run it with the "enforcer" executable.
 The DSL should be formed like such:
 
   Enforcer "your github account", "your github api key" do
-    project "some project", "user1", "user2", "user3"
+    project "project", "user1", "user2", "user3"
+
+    postreceive "project", "http://rdoc.info/projects/update",
+                           "http://example.com/post"
   end
 
 The users passed into the project are then set as the collaborators. Any
-users not listed are removed. You could use a GitHub API wrapper like
-Octopi to load up your projects as well. Here's a more complex example:
+users not listed are removed. You can also set postreceive URLs as well.
+
+== advanced
+
+You could use a GitHub API wrapper like Octopi to load up your projects.
+Here's a more complex example:
 
   require 'octopi'
   include Octopi
