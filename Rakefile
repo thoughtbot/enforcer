@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake'
+require 'lib/enforcer'
 
 task :default => [:test, :features]
 
@@ -7,12 +8,18 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "enforcer"
+    gem.version = Enforcer::VERSION
     gem.summary = %Q{A simple way to manage permissions on GitHub}
     gem.email = "nquaranto@thoughtbot.com"
     gem.homepage = "http://github.com/thoughtbot/enforcer"
     gem.authors = ["Nick Quaranto"]
-    gem.add_dependency("httparty")
-    gem.add_dependency("fcoury-octopi")
+    gem.add_runtime_dependency("httparty")
+    gem.add_runtime_dependency("octopi")
+    gem.add_runtime_dependency("json")
+    gem.add_development_dependency("shoulda")
+    gem.add_development_dependency("rr")
+    gem.add_development_dependency("cucumber")
+    gem.add_development_dependency("fakeweb")
   end
 
 rescue LoadError

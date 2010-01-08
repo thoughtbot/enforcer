@@ -16,7 +16,7 @@ class RepositoryTest < Test::Unit::TestCase
 
     context "github is down" do
       should "not fail" do
-        stub(Repository).get(anything, anything) { raise TimeoutError }
+        stub(Repository).get(anything, anything) { raise TimeoutError.new("Failwhale!") }
         assert_nothing_raised do
           @repo.list
         end

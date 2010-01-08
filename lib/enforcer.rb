@@ -4,9 +4,11 @@ require 'rubygems'
 require 'httparty'
 require 'json'
 
-require 'repository'
+require 'enforcer/repository'
 
 class Enforcer
+  VERSION = "0.0.3"
+
   def initialize(account_name, api_key)
     @account_name = account_name
     @api_key = api_key
