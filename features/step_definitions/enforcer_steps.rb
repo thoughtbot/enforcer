@@ -31,5 +31,5 @@ Then /^the GitHub API should have received a request to remove "([^\"]*)" as a c
 end
 
 Then /^the GitHub API should have received a request to add "([^\"]*)" as a post\-receive url for "([^\"]*)"$/ do |url, repo|
-  assert_received(@repo) { |subject| subject.postreceive(url) }
+  assert_received(@repo) { |subject| subject.postreceive(satisfy { |urls| urls.include?(url) }) }
 end

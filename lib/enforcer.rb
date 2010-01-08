@@ -35,10 +35,12 @@ class Enforcer
       end
   end
 
-  def postreceive(project_name, url)
-    STDOUT.puts "Enforcing post-receive url for #{project_name}"
+  def postreceive(project_name, *urls)
+    STDOUT.puts "Enforcing post-receive urls for #{project_name}"
+
     repo = Repository.new(@account_name, @api_key, project_name)
-    repo.postreceive(url)
+
+    repo.postreceive(urls)
   end
 end
 

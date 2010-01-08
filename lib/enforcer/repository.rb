@@ -39,16 +39,17 @@ class Repository
     request(:post, "/collaborators/#{@project}/remove/#{collaborator}")
   end
 
-  def postreceive(hook)
-    auth = {:login => @account, :token => @api_key}
-
+  def postreceive(hooks)
     url = URI.parse "https://github.com/#{@account}/#{@project}/edit/postreceive_urls"
+
     req = Net::HTTP::Post.new(url.path)
-    req.set_form_data({"urls[]" => hook}.merge(auth), '&')
+    req.body = "login=#{@account}&token=#{@api_key}&#{hooks.map { |hook| "urls[]=#{hook}" }.join('&')}"
+    req.content_type = 'application/x-www-form-urlencoded'
 
     server = Net::HTTP.new url.host, url.port
     server.use_ssl = url.scheme == 'https'
     server.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
     res = server.start {|http| http.request(req) }
     res.body
   end

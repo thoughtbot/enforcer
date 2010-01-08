@@ -74,7 +74,15 @@ class EnforcerTest < Test::Unit::TestCase
         @enforcer.postreceive @project, 'http://example.com'
 
         assert_received(@repo) do |subject|
-          subject.postreceive('http://example.com')
+          subject.postreceive(['http://example.com'])
+        end
+      end
+
+      should "add postreceive urls to the project" do
+        @enforcer.postreceive @project, 'http://example.com', 'http://ci.example.com'
+
+        assert_received(@repo) do |subject|
+          subject.postreceive(['http://example.com', 'http://ci.example.com'])
         end
       end
     end
