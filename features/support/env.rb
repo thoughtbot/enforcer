@@ -6,6 +6,8 @@ require 'fakeweb'
 
 FakeWeb.allow_net_connect = false
 
+TEST_DIR    = File.join('/', 'tmp', 'enforcer')
+
 World(Test::Unit::Assertions)
 World(RR::Adapters::TestUnit)
 

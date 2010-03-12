@@ -1,5 +1,6 @@
 Feature: Set hooks
 
+  @wip
   Scenario: Adding a hook to a project
     When I execute the following code
      """
@@ -9,6 +10,7 @@ Feature: Set hooks
      """
     Then the GitHub API should have received a request to add "http://ci.thoughtbot.com" as a post-receive url for "shoulda"
 
+  @wip
   Scenario: Adding hooks to a project
     When I execute the following code
      """
