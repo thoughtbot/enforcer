@@ -7,7 +7,7 @@ require 'json'
 require 'enforcer/repository'
 
 class Enforcer
-  VERSION = "0.1.0"
+  VERSION = "0.1.1"
 
   def initialize(account_name, api_key)
     @account_name = account_name
