@@ -16,7 +16,41 @@ class Repository
     @api_key = api_key
   end
 
+  def tick_api_counter!
+    now = Time.now
+    @@last_access ||= now
+    @@access_counter ||= 0
+    reset_counter if now - @@last_access > 60
+    @@access_counter += 1
+  end
+
+  def reset_counter
+    @@last_access = Time.now
+    @@access_counter = 0
+  end
+
+  def too_many_api_hits?
+    @@access_counter >= 60 && Time.now - @@last_access <= 60
+  end
+
+  def remaining_seconds
+    [60 - (Time.now - @@last_access), 0].max
+  end
+
+  def hit_count
+    @@access_counter
+  end
+
+  def throttle_to_the_minute!
+    tick_api_counter!
+    if too_many_api_hits?
+      puts "The GitHub API does not allow more than 60 requests per minute. Sleeping for #{remaining_seconds} seconds."
+      sleep( remaining_seconds )
+    end
+  end
+
   def request(method, path)
+    throttle_to_the_minute!
     begin
       response = self.class.send(method, path, :body => { :login => @account, :token => @api_key })
       response['collaborators']
@@ -40,6 +74,7 @@ class Repository
   end
 
   def postreceive(hooks)
+    throttle_to_the_minute!
     url = URI.parse "https://github.com/#{@account}/#{@project}/edit/postreceive_urls"
 
     req = Net::HTTP::Post.new(url.path)

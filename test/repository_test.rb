@@ -92,5 +92,42 @@ class RepositoryTest < Test::Unit::TestCase
         assert_equal ["qrush"], @result
       end
     end
+
+    context "calling the API a lot in one minute" do
+      setup do
+        now = Time.now
+        stub(Time).now { now }
+        @repo.reset_counter
+      end
+
+      teardown do
+        @repo.reset_counter
+      end
+
+      should "keep track in the api counter" do
+        65.times{ @repo.tick_api_counter! }
+        assert_equal 65, @repo.hit_count
+        assert @repo.too_many_api_hits?
+      end
+
+      should "make sure the time remaining is correct if we go over" do
+        65.times{ @repo.tick_api_counter! }
+
+        now = Time.now + 10
+        stub(Time).now { now }
+
+        assert @repo.too_many_api_hits?
+        assert_equal 50, @repo.remaining_seconds
+      end
+
+      should "reset after a minute passes" do
+        65.times{ @repo.tick_api_counter! }
+        now = Time.now + 61
+        stub(Time).now { now }
+        @repo.tick_api_counter! 
+        assert_equal 1, @repo.hit_count
+        assert ! @repo.too_many_api_hits?
+      end
+    end
   end
 end
