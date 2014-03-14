@@ -1,6 +1,6 @@
 = DEPRECATED
 
-Thoughtbot is no longer supporting this project, it hasn't been tested or used since GitHub introduced Organizations (https://github.com/blog/674-introducing-organizations).
+thoughtbot is no longer supporting this project, it hasn't been tested or used since GitHub introduced Organizations (https://github.com/blog/674-introducing-organizations).
 
 = enforcer
 
